@@ -96,22 +96,6 @@ export function usePageTracker() {
       });
     };
 
-    // 5. Intercept explicit pushState
-    const handlePushState = (event) => {
-      trackEvent('pushstate', {
-        url: event.detail.url,
-        state: event.detail.state,
-      });
-    };
-
-    // 6. Intercept explicit replaceState
-    const handleReplaceState = (event) => {
-      trackEvent('replacestate', {
-        url: event.detail.url,
-        state: event.detail.state,
-      });
-    };
-
     // 7. Page visibility (tabbing away or minimizing browser)
     const handleVisibilityChange = () => {
       trackEvent('visibility', {
@@ -120,14 +104,10 @@ export function usePageTracker() {
     };
 
     window.addEventListener('popstate', handlePopState);
-    window.addEventListener('pushstate', handlePushState);
-    window.addEventListener('replacestate', handleReplaceState);
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       window.removeEventListener('popstate', handlePopState);
-      window.removeEventListener('pushstate', handlePushState);
-      window.removeEventListener('replacestate', handleReplaceState);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
