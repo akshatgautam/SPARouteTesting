@@ -73,18 +73,9 @@ export const trackEvent = (type, payload) => {
     }
   });
 
-  // 2. Call real WebSDK if present
-  if (window.WebSDK && typeof window.WebSDK.track === 'function') {
-    try {
-      window.WebSDK.track(type, payload);
-    } catch (err) {
-      console.error('Real WebSDK execution failed:', err);
-    }
-  } else {
-    // 3. Fallback console logging
-    console.log(`%c[SDK] ${type.toUpperCase()}`, 'color: #00ffcc; font-weight: bold;', {
-      url: event.url,
-      ...event.payload
-    });
-  }
+  // 2. Default console logging (safe fallback)
+  console.log(`%c[SDK Event] ${type.toUpperCase()}`, 'color: #00ffcc; font-weight: bold;', {
+    url: event.url,
+    ...event.payload
+  });
 };
