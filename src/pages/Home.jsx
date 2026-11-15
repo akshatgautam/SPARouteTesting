@@ -1,77 +1,106 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { PRODUCTS } from '../data/products';
+import ProductCard from '../components/ProductCard';
+import { announceSmartechPage } from '../smartechPage';
+
+const FEATURED = PRODUCTS.slice(0, 3);
 
 export function Home() {
+  useEffect(() => {
+    announceSmartechPage('home page');
+  }, []);
+
   return (
     <div className="page-container home-page">
-      <header className="page-header">
-        <h1>SDK Testing Ground</h1>
+      <header className="page-header storefront-hero">
+        <p className="eyebrow">Orbit Gear</p>
+        <h1>Hardware that keeps pace</h1>
         <p className="subtitle">
-          This single-page application is designed to trigger and test every possible client-side navigation and interaction event that a tracking WebSDK needs to capture.
+          Shop peripherals, displays, and cooling — with the same SPA navigation
+          scenarios this sandbox was built to exercise.
         </p>
+        <div className="btn-group">
+          <Link to="/products" className="btn btn-primary">
+            Shop all
+          </Link>
+          <Link to="/#featured" className="btn btn-secondary">
+            Jump to featured
+          </Link>
+        </div>
       </header>
 
-      <div className="grid grid-2">
-        <div className="card glass-card">
-          <div className="card-header">
-            <span className="card-icon">⚡</span>
-            <h2>Scenario 1 & 7: Navigation & Anchors</h2>
-          </div>
-          <p>
-            Use standard routing links or trigger in-page anchor navigation. Anchor updates change the hash sub-route and trigger <code>anchorchange</code> events.
-          </p>
-          <div className="btn-group">
-            <Link to="/#section-a" className="btn btn-primary">
-              Scroll to Section A
-            </Link>
-            <Link to="/#section-b" className="btn btn-secondary">
-              Scroll to Section B
-            </Link>
-          </div>
+      <section id="featured" className="store-section">
+        <div className="section-heading">
+          <h2>Featured gear</h2>
+          <p>Scenario 1 &amp; 7: in-page anchors update the hash and fire anchorchange.</p>
         </div>
-
-        <div className="card glass-card">
-          <div className="card-header">
-            <span className="card-icon">👁️</span>
-            <h2>Scenario 8: Page Visibility</h2>
-          </div>
-          <p>
-            WebSDKs track when a tab becomes inactive or active. Try switching to a different browser tab and coming back, or minimizing the browser window.
-          </p>
-          <div className="visibility-guide">
-            <span className="pulse-indicator"></span>
-            <span>Watch the SDK log update with <code>visibility</code> hidden/visible events.</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="spacer-lg"></div>
-
-      {/* Anchor Targets */}
-      <section id="section-a" className="anchor-section">
-        <div className="section-content glass-card">
-          <span className="section-tag">Target A</span>
-          <h2>Section A</h2>
-          <p>
-            You have navigated to Section A via an in-page anchor link. In a HashRouter, this alters the hash URL to <code>#/foo#section-a</code>, allowing the hook to catch the anchor change without changing routes.
-          </p>
-          <Link to="/" className="btn btn-outline btn-sm">Back to Top</Link>
+        <div className="product-grid">
+          {FEATURED.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </section>
 
       <div className="spacer-md"></div>
 
-      <section id="section-b" className="anchor-section">
-        <div className="section-content glass-card">
-          <span className="section-tag bg-purple">Target B</span>
-          <h2>Section B</h2>
+      <div className="grid grid-2">
+        <div className="card glass-card">
+          <div className="card-header">
+            <h2>Scenario 1 &amp; 7: Navigation &amp; Anchors</h2>
+          </div>
           <p>
-            You have scrolled to Section B. The SDK tracker caught this hash change as well, rendering an <code>anchorchange</code> event in the real-time event logs panel.
+            Use store links or jump to in-page sections. Anchor updates change the
+            hash sub-route and trigger <code>anchorchange</code> events.
           </p>
-          <Link to="/" className="btn btn-outline btn-sm">Back to Top</Link>
+          <div className="btn-group">
+            <Link to="/#featured" className="btn btn-primary">
+              Scroll to Featured
+            </Link>
+            <Link to="/#new-arrivals" className="btn btn-secondary">
+              Scroll to New Arrivals
+            </Link>
+          </div>
+        </div>
+
+        <div className="card glass-card">
+          <div className="card-header">
+            <h2>Scenario 8: Page Visibility</h2>
+          </div>
+          <p>
+            Switch tabs or minimize the window. The SDK log should show{' '}
+            <code>visibility</code> hidden/visible events.
+          </p>
+          <div className="visibility-guide">
+            <span className="pulse-indicator"></span>
+            <span>Watch the event stream panel while you leave and return.</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="spacer-md"></div>
+
+      <section id="new-arrivals" className="store-section anchor-section">
+        <div className="section-content glass-card">
+          <span className="section-tag">Target</span>
+          <h2>New arrivals</h2>
+          <p>
+            You landed on this section via an in-page anchor. In HashRouter this
+            becomes something like <code>#/#new-arrivals</code>, so the tracker can
+            catch the anchor change without a route swap.
+          </p>
+          <div className="product-grid product-grid-compact">
+            {PRODUCTS.slice(3).map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+          <div className="spacer-sm"></div>
+          <Link to="/" className="btn btn-outline btn-sm">
+            Back to top
+          </Link>
         </div>
       </section>
-      
+
       <div className="spacer-lg"></div>
     </div>
   );
