@@ -59,7 +59,7 @@ export function usePageTracker() {
       prevSearch.current = location.search;
     }
 
-    // 3. In-page anchor transitions (e.g. linking to #/about#section-a)
+    // 3. In-page anchor transitions (BrowserRouter: location.hash is the fragment)
     if (location.hash !== prevHash.current) {
       trackEvent('anchorchange', {
         hash: location.hash,
@@ -71,13 +71,9 @@ export function usePageTracker() {
 
     // Smooth scroll to anchor if present in URL hash
     if (location.hash) {
-      // Decode URL in case of special characters, slice off the leading #
       const elementId = decodeURIComponent(location.hash.substring(1));
-      // In react router HashRouter, the hash contains route, so we might need to parse.
-      // E.g., if url is `#/about#section-a`, react router location.hash is `#section-a`
       const element = document.getElementById(elementId);
       if (element) {
-        // Delay slightly to allow component rendering if necessary
         const timer = setTimeout(() => {
           element.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }, 50);
@@ -91,7 +87,7 @@ export function usePageTracker() {
     // 4. Back / Forward button actions (popstate)
     const handlePopState = (event) => {
       trackEvent('popstate', {
-        url: window.location.hash || '#/',
+        url: `${window.location.pathname}${window.location.search}${window.location.hash}`,
         state: event.state,
       });
     };

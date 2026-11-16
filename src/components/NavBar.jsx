@@ -1,19 +1,11 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 
 export function NavBar() {
   const navigate = useNavigate();
-  const { itemCount, openCart } = useCart();
+  const { itemCount } = useCart();
   const [query, setQuery] = useState('');
-
-  const triggerBack = () => {
-    window.history.back();
-  };
-
-  const triggerForward = () => {
-    window.history.forward();
-  };
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -23,84 +15,48 @@ export function NavBar() {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-logo">
-        <span className="logo-pulse"></span>
-        <NavLink to="/" className="logo-text">
+    <header className="site-header">
+      <nav className="navbar">
+        <Link to="/" className="brand">
           Orbit Gear
-        </NavLink>
-      </div>
+        </Link>
 
-      <div className="navbar-links">
-        <NavLink
-          to="/"
-          end
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-        >
-          Home
-        </NavLink>
-        <NavLink
-          to="/products"
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-        >
-          Shop
-        </NavLink>
-        <NavLink
-          to="/lab"
-          className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-        >
-          Nav Lab
-        </NavLink>
-      </div>
-
-      <form className="navbar-search" onSubmit={handleSearch} role="search">
-        <input
-          type="search"
-          name="q"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search products…"
-          aria-label="Search products"
-        />
-        <button type="submit" className="btn btn-control">
-          Search
-        </button>
-      </form>
-
-      <div className="navbar-actions">
-        <button
-          type="button"
-          className="cart-trigger"
-          onClick={openCart}
-          aria-label={`Open cart, ${itemCount} items`}
-        >
-          <span className="cart-trigger-label">Cart</span>
-          {itemCount > 0 && (
-            <span className="cart-badge">{itemCount}</span>
-          )}
-        </button>
-
-        <div className="navbar-controls">
-          <span className="controls-label">Browser Simulator</span>
-          <button
-            className="btn btn-control"
-            onClick={triggerBack}
-            title="Go back in history"
-            type="button"
+        <div className="navbar-links">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
           >
-            ← Back
-          </button>
-          <button
-            className="btn btn-control"
-            onClick={triggerForward}
-            title="Go forward in history"
-            type="button"
+            Home
+          </NavLink>
+          <NavLink
+            to="/products"
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
           >
-            Forward →
-          </button>
+            Shop
+          </NavLink>
         </div>
-      </div>
-    </nav>
+
+        <form className="navbar-search" onSubmit={handleSearch} role="search">
+          <input
+            type="search"
+            name="q"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search gear…"
+            aria-label="Search products"
+          />
+          <button type="submit" className="btn btn-ghost btn-sm">
+            Search
+          </button>
+        </form>
+
+        <Link to="/cart" className="cart-link" aria-label={`Cart, ${itemCount} items`}>
+          Cart
+          {itemCount > 0 && <span className="cart-badge">{itemCount}</span>}
+        </Link>
+      </nav>
+    </header>
   );
 }
 

@@ -27,14 +27,10 @@ export function ProductListing() {
     <div className="page-container listing-page">
       <header className="page-header">
         <h1>Shop</h1>
-        <p className="subtitle">
-          Product listing with category filters via query params — Scenario 6 style
-          mutations on a collection page.
-        </p>
+        <p className="subtitle">Browse the full Orbit Gear catalog.</p>
       </header>
 
       <div className="filter-bar">
-        <span className="scen-label">Filter by category (?category=)</span>
         <div className="filter-chips">
           {CATEGORIES.map((cat) => (
             <button
@@ -55,7 +51,7 @@ export function ProductListing() {
       </p>
 
       {products.length === 0 ? (
-        <div className="empty-catalog glass-card">
+        <div className="empty-state-block">
           <p>No products in this category.</p>
           <button
             type="button"
@@ -73,10 +69,9 @@ export function ProductListing() {
         </div>
       )}
 
-      <div className="spacer-md"></div>
-      <p className="text-secondary">
-        Looking for something specific? Try{' '}
-        <Link to="/search?q=wireless">searching for wireless</Link>.
+      <p className="page-footnote">
+        Looking for something specific?{' '}
+        <Link to="/search?q=wireless">Search wireless gear</Link>.
       </p>
     </div>
   );

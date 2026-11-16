@@ -4,11 +4,7 @@ const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openCart = () => setIsOpen(true);
-  const closeCart = () => setIsOpen(false);
-  const toggleCart = () => setIsOpen((prev) => !prev);
+  const [lastOrder, setLastOrder] = useState(null);
 
   const addItem = (product, qty = 1) => {
     setItems((prev) => {
@@ -31,7 +27,6 @@ export function CartProvider({ children }) {
         },
       ];
     });
-    setIsOpen(true);
   };
 
   const removeItem = (id) => {
@@ -50,6 +45,19 @@ export function CartProvider({ children }) {
 
   const clearCart = () => setItems([]);
 
+  const placeOrder = (customer) => {
+    const order = {
+      id: `OG-${Date.now().toString(36).toUpperCase()}`,
+      placedAt: new Date().toISOString(),
+      customer,
+      items: items.map((item) => ({ ...item })),
+      subtotal: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    };
+    setLastOrder(order);
+    setItems([]);
+    return order;
+  };
+
   const itemCount = useMemo(
     () => items.reduce((sum, item) => sum + item.quantity, 0),
     [items]
@@ -62,14 +70,12 @@ export function CartProvider({ children }) {
 
   const value = {
     items,
-    isOpen,
-    openCart,
-    closeCart,
-    toggleCart,
+    lastOrder,
     addItem,
     removeItem,
     updateQuantity,
     clearCart,
+    placeOrder,
     itemCount,
     subtotal,
   };

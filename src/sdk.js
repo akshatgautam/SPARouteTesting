@@ -22,8 +22,8 @@ export const subscribeToEvents = (callback) => {
  * @param {Object} payload - Event metadata.
  */
 export const trackEvent = (type, payload) => {
-  const currentPath = window.location.hash || '#/';
-  
+  const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
   const event = {
     id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2, 9),
     timestamp: new Date().toLocaleTimeString(),

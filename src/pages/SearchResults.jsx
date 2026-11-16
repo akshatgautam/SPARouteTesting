@@ -29,10 +29,7 @@ export function SearchResults() {
     <div className="page-container search-page">
       <header className="page-header">
         <h1>Search results</h1>
-        <p className="subtitle">
-          Scenario 6: changing <code>?q=</code> fires <code>querychange</code>{' '}
-          without leaving the search route.
-        </p>
+        <p className="subtitle">Find gear by name, category, or tag.</p>
       </header>
 
       <form className="search-page-form" onSubmit={handleSubmit} role="search">
@@ -58,20 +55,20 @@ export function SearchResults() {
           <p>Enter a query to search the catalog.</p>
         )}
         <div className="btn-group">
-          <Link to="/search?q=wireless" className="btn btn-outline btn-sm">
-            Try &ldquo;wireless&rdquo;
+          <Link to="/search?q=wireless" className="btn btn-ghost btn-sm">
+            wireless
           </Link>
-          <Link to="/search?q=monitor" className="btn btn-outline btn-sm">
-            Try &ldquo;monitor&rdquo;
+          <Link to="/search?q=monitor" className="btn btn-ghost btn-sm">
+            monitor
           </Link>
-          <Link to="/search?q=cooling" className="btn btn-outline btn-sm">
-            Try &ldquo;cooling&rdquo;
+          <Link to="/search?q=cooling" className="btn btn-ghost btn-sm">
+            cooling
           </Link>
         </div>
       </div>
 
       {query && results.length === 0 ? (
-        <div className="empty-catalog glass-card">
+        <div className="empty-state-block">
           <p>No products matched that search.</p>
           <Link to="/products" className="btn btn-secondary">
             Browse all products
