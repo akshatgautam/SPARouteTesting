@@ -11,7 +11,7 @@ const CART_STORAGE_KEY = 'orbit-gear-cart';
 
 function readStoredCart() {
   try {
-    const raw = sessionStorage.getItem(CART_STORAGE_KEY);
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
@@ -23,10 +23,10 @@ function readStoredCart() {
 function writeStoredCart(items) {
   try {
     if (!items.length) {
-      sessionStorage.removeItem(CART_STORAGE_KEY);
+      localStorage.removeItem(CART_STORAGE_KEY);
       return;
     }
-    sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
   } catch {
     // Ignore quota / private-mode failures
   }

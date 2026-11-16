@@ -10,7 +10,7 @@ export function OrderConfirmation() {
   useEffect(() => {
     announceSmartechPage('order confirmation page');
     clearCart();
-    // Intentionally once on mount: clear any leftover session cart
+    // Intentionally once on mount: clear any leftover stored cart
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
