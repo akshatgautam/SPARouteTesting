@@ -1,10 +1,44 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 
 const CartContext = createContext(null);
+const CART_STORAGE_KEY = 'orbit-gear-cart';
+
+function readStoredCart() {
+  try {
+    const raw = sessionStorage.getItem(CART_STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeStoredCart(items) {
+  try {
+    if (!items.length) {
+      sessionStorage.removeItem(CART_STORAGE_KEY);
+      return;
+    }
+    sessionStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  } catch {
+    // Ignore quota / private-mode failures
+  }
+}
 
 export function CartProvider({ children }) {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState(() => readStoredCart());
   const [lastOrder, setLastOrder] = useState(null);
+
+  useEffect(() => {
+    writeStoredCart(items);
+  }, [items]);
 
   const addItem = (product, qty = 1) => {
     setItems((prev) => {
@@ -43,7 +77,10 @@ export function CartProvider({ children }) {
     );
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = () => {
+    setItems([]);
+    writeStoredCart([]);
+  };
 
   const placeOrder = (customer) => {
     const order = {
@@ -54,7 +91,7 @@ export function CartProvider({ children }) {
       subtotal: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
     };
     setLastOrder(order);
-    setItems([]);
+    clearCart();
     return order;
   };
 

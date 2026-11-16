@@ -5,10 +5,13 @@ import { formatPrice } from '../data/products';
 import { announceSmartechPage } from '../smartechPage';
 
 export function OrderConfirmation() {
-  const { lastOrder } = useCart();
+  const { lastOrder, clearCart } = useCart();
 
   useEffect(() => {
     announceSmartechPage('order confirmation page');
+    clearCart();
+    // Intentionally once on mount: clear any leftover session cart
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!lastOrder) {
