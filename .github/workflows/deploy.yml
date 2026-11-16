@@ -29,6 +29,9 @@ jobs:
       - name: Build Project
         run: npm run build
 
+      - name: Clone index.html to 404.html 📄
+        run: cp dist/index.html dist/404.html
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
