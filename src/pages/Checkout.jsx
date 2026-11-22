@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import { announceSmartechPage } from '../smartechPage';
+import { trackCheckout } from '../utils/smartech';
 
 const INITIAL = {
   name: 'Akshat Gautam',
@@ -18,10 +19,19 @@ export function Checkout() {
   const [form, setForm] = useState(INITIAL);
   const [submitting, setSubmitting] = useState(false);
   const placingOrderRef = useRef(false);
+  const checkoutTrackedRef = useRef(false);
 
   useEffect(() => {
     announceSmartechPage('checkout page');
   }, []);
+
+  // Netcore "checkout" once per visit, after the cart is known to be non-empty.
+  // The ref blocks re-renders; trackCheckout also ignores a StrictMode remount.
+  useEffect(() => {
+    if (checkoutTrackedRef.current || items.length === 0) return;
+    checkoutTrackedRef.current = true;
+    trackCheckout();
+  }, [items.length]);
 
   // Redirect empty cart away — skip while placing so placeOrder's cart
   // clear does not race the confirmation navigation.

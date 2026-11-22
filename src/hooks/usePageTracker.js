@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { trackEvent } from '../sdk';
+import { trackPageBrowse } from '../utils/smartech';
 
 /**
  * Custom hook to monitor all WebSDK tracking scenarios:
@@ -15,6 +16,12 @@ import { trackEvent } from '../sdk';
  */
 export function usePageTracker() {
   const location = useLocation();
+
+  // Netcore "page browse" on the first load and on every URL change
+  // (path, query, or hash). One effect so a single navigation fires once.
+  useEffect(() => {
+    trackPageBrowse();
+  }, [location.pathname, location.search, location.hash]);
 
   const prevPathname = useRef(location.pathname);
   const prevSearch = useRef(location.search);

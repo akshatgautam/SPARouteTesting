@@ -5,6 +5,8 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { getProductById } from '../data/products';
+import { trackAddToCart } from '../utils/smartech';
 
 const CartContext = createContext(null);
 const CART_STORAGE_KEY = 'orbit-gear-cart';
@@ -32,6 +34,17 @@ function writeStoredCart(items) {
   }
 }
 
+function productForTracking(product) {
+  const catalog = getProductById(product?.id);
+  return {
+    id: product?.id ?? catalog?.id ?? '',
+    name: product?.name || catalog?.name || '',
+    category: product?.category || catalog?.category || '',
+    price: product?.price ?? catalog?.price ?? 0,
+    image: product?.image || product?.imageUrl || catalog?.image || '',
+  };
+}
+
 export function CartProvider({ children }) {
   const [items, setItems] = useState(() => readStoredCart());
   const [lastOrder, setLastOrder] = useState(null);
@@ -41,6 +54,11 @@ export function CartProvider({ children }) {
   }, [items]);
 
   const addItem = (product, qty = 1) => {
+    const added = Number(qty);
+    if (product && Number.isFinite(added) && added > 0) {
+      trackAddToCart(productForTracking(product), added);
+    }
+
     setItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
       if (existing) {
@@ -72,6 +90,12 @@ export function CartProvider({ children }) {
       removeItem(id);
       return;
     }
+
+    const current = items.find((item) => item.id === id);
+    if (current && quantity > current.quantity) {
+      trackAddToCart(productForTracking(current), quantity - current.quantity);
+    }
+
     setItems((prev) =>
       prev.map((item) => (item.id === id ? { ...item, quantity } : item))
     );
